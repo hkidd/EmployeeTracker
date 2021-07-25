@@ -138,6 +138,7 @@ function empQues() {
 
     console.log(newEmployee);
 
+    // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
         console.log(response);
       
@@ -170,6 +171,7 @@ function roleQues() {
 
     console.log(newRole);
 
+    // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
         console.log(response);
       
@@ -199,6 +201,7 @@ function depQues() {
 
     console.log(newDepartment);
 
+    // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
         console.log(response);
       
