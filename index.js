@@ -102,15 +102,39 @@ inquirer.prompt(mainQuestion).then((response) => {
   } 
   else if (task == "Add Employee") {
     // This should activate the employee questions prompts
+    empQues();
   } 
   else if (task == "Add Role") {
     // This should activate the role questions prompts
+    roleQues();
   } 
   else if (task == "Add Department") {
     // This should activate the add department prompt
+    depQues();
   }
 
 });
+
+function empQues() {
+    inquirer.prompt(empQuestions).then((response) => {
+        console.log(response);
+
+    });
+};
+
+function roleQues() {
+    inquirer.prompt(roleQuestions).then((response) => {
+        console.log(response);
+
+    });
+};
+
+function depQues() {
+    inquirer.prompt(depQuestion).then((response) => {
+        console.log(response);
+
+    });
+};
 
 // Function to initialize app
 function init() {}
