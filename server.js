@@ -18,9 +18,9 @@ const db = mysql.createConnection(
     user: "root",
     // MySQL password
     password: "password",
-    database: "",
+    database: "employees_db",
   },
-  console.log(`Connected to the _____ database.`)
+  console.log(`Connected to the employees database.`)
 );
 
 // Query database
@@ -28,7 +28,7 @@ db.query("SELECT * FROM employees", function (err, results) {
   console.log(results);
 });
 
-db.query("SELECT * FROM department", function (err, results) {
+db.query("SELECT * FROM departments", function (err, results) {
   console.log(results);
 });
 
