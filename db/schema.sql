@@ -10,14 +10,22 @@ CREATE TABLE employees(
     last_name VARCHAR(30) NOT NULL,
     title VARCHAR(30) NOT NULL,
     department VARCHAR(30) NOT NULL,
-    salary INT NOT NULL
-    manager VARCHAR(50) NOT NULL,
+    salary INT NOT NULL,
+    manager VARCHAR(50) NOT NULL
 );
 
 -- Create a table to just hold the departments? If there is no employee in a certain department in the employee db, would need to be able to still access all department values
 CREATE TABLE departments(
     id INT NOT NULL,
     department VARCHAR(30) NOT NULL
+);
+
+-- Create a table to just hold the roles? As new roles are created, they can be inserted into this table with the relevant info
+CREATE TABLE roles(
+    id INT NOT NULL,
+    title VARCHAR(30) NOT NULL,
+    department VARCHAR(30) NOT NULL,
+    salary INT NOT NULL
 );
 
 -- Need to be able to list all employees using a CLI response

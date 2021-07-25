@@ -1,7 +1,7 @@
 // Import and require express, mysql2, and inquirer (maybe for a different file?)
-const express = require('express');
-const mysql = require('mysql2');
-const index = require('./index');
+const express = require("express");
+const mysql = require("mysql2");
+const index = require("./index");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -13,18 +13,26 @@ app.use(express.json());
 // Connect to database
 const db = mysql.createConnection(
   {
-    host: 'localhost',
+    host: "localhost",
     // MySQL username,
-    user: 'root',
+    user: "root",
     // MySQL password
-    password: 'password',
-    database: ''
+    password: "password",
+    database: "",
   },
   console.log(`Connected to the _____ database.`)
 );
 
 // Query database
-db.query('SELECT * FROM ', function (err, results) {
+db.query("SELECT * FROM employees", function (err, results) {
+  console.log(results);
+});
+
+db.query("SELECT * FROM department", function (err, results) {
+  console.log(results);
+});
+
+db.query("SELECT * FROM roles", function (err, results) {
   console.log(results);
 });
 
