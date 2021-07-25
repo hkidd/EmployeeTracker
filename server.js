@@ -33,6 +33,7 @@ app.use((req, res) => {
   res.status(404).end();
 });
 
+// Logs the port the server is currently listening on
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
