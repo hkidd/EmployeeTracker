@@ -24,12 +24,6 @@ const mainQuestion = {
   ],
 };
 
-// View All Employees needs to show the entire table of employees from the database. SELECT * FROM employees
-
-// View All Departments needs to show the entire table of departments from the database. SELECT * FROM departments
-
-// View All Roles needs to show all roles currently present in the database.  SELECT * FROM roles
-
 // Add Employee should prompt the user to type the first name of the employee, followed by last name, then select a role from an inquirer list and selet the employee's manager from an inquirer list as well (This adds the employee to the database.  INSERT INTO employees?)
 
 // Add Role should prompt the user to type the name of the role, followed by the salary of the role, and then using a list choose which department the role belongs to (Push into an array of role objects?)
