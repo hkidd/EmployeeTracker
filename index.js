@@ -90,8 +90,6 @@ const roleQuestions = [
 ];
 
 inquirer.prompt(mainQuestion).then((response) => {
-  console.log(response);
-
   let task = response.task;
   console.log(task);
 
@@ -116,11 +114,11 @@ function checkTask(task) {
     // This should activate the add department prompt
     depQues();
   }
-};
+}
 
 function empQues() {
   inquirer.prompt(empQuestions).then((response) => {
-    console.log(response);
+    // console.log(response);
 
     let task = response.task;
     let emFirstName = response.emFirstName;
@@ -130,32 +128,32 @@ function empQues() {
 
     // Create a new employee with these values
     const newEmployee = new Employee(
-        emFirstName,
-        emLastName,
-        emRole,
-        emManager
-    ); 
+      emFirstName,
+      emLastName,
+      emRole,
+      emManager
+    );
 
     console.log(newEmployee);
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-        console.log(response);
-      
-        let task = response.task;
-        console.log(task);
-      
-        checkTask(task);
-        return task;
-      });
+    //   console.log(response);
+
+      let task = response.task;
+      console.log(task);
+
+      checkTask(task);
+      return task;
+    });
 
     checkTask(task);
   });
-};
+}
 
 function roleQues() {
   inquirer.prompt(roleQuestions).then((response) => {
-    console.log(response);
+    // console.log(response);
 
     let task = response.task;
     let roleName = response.roleName;
@@ -163,61 +161,52 @@ function roleQues() {
     let roleDep = response.roleDep;
 
     // Create a new role with these values
-    const newRole = new Role(
-        roleName,
-        roleSalary,
-        roleDep,
-    );
+    const newRole = new Role(roleName, roleSalary, roleDep);
 
     console.log(newRole);
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-        console.log(response);
-      
-        let task = response.task;
-        console.log(task);
-      
-        checkTask(task);
-        return task;
-      });
+    //   console.log(response);
+
+      let task = response.task;
+      console.log(task);
+
+      checkTask(task);
+      return task;
+    });
 
     checkTask(task);
   });
-};
+}
 
 function depQues() {
   inquirer.prompt(depQuestion).then((response) => {
-    console.log(response);
+    // console.log(response);
 
     let task = response.task;
     let newDep = response.depName;
 
     // Create a new department with this name
     depArray.push(newDep);
-    const newDepartment = new Department(
-        newDep,
-    );
+    const newDepartment = new Department(newDep);
 
     console.log(newDepartment);
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-        console.log(response);
-      
-        let task = response.task;
-        console.log(task);
-      
-        checkTask(task);
-        return task;
-      });
+    //   console.log(response);
+
+      let task = response.task;
+      console.log(task);
+
+      checkTask(task);
+      return task;
+    });
 
     checkTask(task);
   });
-};
+}
 
-// Function to initialize app
-function init() {}
-
-// Function call to initialize app
-init();
+// // Function call to initialize app
+// init();
