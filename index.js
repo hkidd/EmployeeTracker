@@ -3,6 +3,9 @@ const inquirer = require("inquirer");
 const Employee = require("./lib/Employee");
 const Department = require("./lib/Department");
 const Role = require("./lib/Role");
+const cTable = require('console.table');
+const db = require('./server');
+
 
 // Start with the task question, which will then branch off to different question arrays
 const mainQuestion = {
@@ -17,6 +20,7 @@ const mainQuestion = {
     "Add Role",
     "View All Departments",
     "Add Department",
+    "I'm Done"
   ],
 };
 
@@ -88,32 +92,98 @@ const roleQuestions = [
     choices: [depArray], //Array of all roles that have been added, or pull from database?
   },
 ];
+function init() {
+  inquirer.prompt(mainQuestion).then((response) => {
+    let task = response.task;
+    console.log(task);
 
-inquirer.prompt(mainQuestion).then((response) => {
-  let task = response.task;
-  console.log(task);
-
-  checkTask(task);
-  return task;
-});
+    checkTask(task);
+    return task;
+  });
+}
 
 function checkTask(task) {
-  if (task == "View All Employees") {
-    // This should run the SELECT * FROM employees query
-  } else if (task == "View All Departments") {
-    // This should run the SELECT * FROM departments query
-  } else if (task == "View All Roles") {
-    // This should run the SELECT * FROM roles query
-  } else if (task == "Add Employee") {
-    // This should activate the employee questions prompts
-    empQues();
-  } else if (task == "Add Role") {
-    // This should activate the role questions prompts
-    roleQues();
-  } else if (task == "Add Department") {
-    // This should activate the add department prompt
-    depQues();
+  switch (task) {
+    case "View All Employees":
+      // This should run the SELECT * FROM employees query
+      viewAllEmployees();
+      break;
+    case "View All Departments":
+      // This should run the SELECT * FROM departments query
+      viewAllDeps();
+      break;
+    case "View All Roles":
+      // This should run the SELECT * FROM roles query
+      viewAllRoles();
+      break;
+    case "Add Employee":
+      // This should activate the employee questions prompts
+      empQues();
+      break;
+    case "Add Role":
+      // This should activate the role questions prompts
+      roleQues();
+      break;
+    case "Add Department":
+      // This should activate the add department prompt
+      depQues();
+      break;
+    case "I'm Done":
+      // End the server connection/program
+      db.end();
+      break;
   }
+}
+
+function viewAllEmployees() {
+  db.query("SELECT * FROM employees", function (err, results) {
+    console.log(results);
+  });
+
+  // Check for what to do next
+  inquirer.prompt(mainQuestion).then((response) => {
+    //   console.log(response);
+
+    let task = response.task;
+    console.log(task);
+
+    checkTask(task);
+    return task;
+  });
+}
+
+function viewAllDeps() {
+  db.query("SELECT * FROM departments", function (err, results) {
+    console.log(results);
+  });
+
+  // Check for what to do next
+  inquirer.prompt(mainQuestion).then((response) => {
+    //   console.log(response);
+
+    let task = response.task;
+    console.log(task);
+
+    checkTask(task);
+    return task;
+  });
+}
+
+function viewAllRoles() {
+  db.query("SELECT * FROM roles", function (err, results) {
+    console.log(results);
+  });
+
+  // Check for what to do next
+  inquirer.prompt(mainQuestion).then((response) => {
+    //   console.log(response);
+
+    let task = response.task;
+    console.log(task);
+
+    checkTask(task);
+    return task;
+  });
 }
 
 function empQues() {
@@ -138,7 +208,7 @@ function empQues() {
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
+      //   console.log(response);
 
       let task = response.task;
       console.log(task);
@@ -167,7 +237,7 @@ function roleQues() {
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
+      //   console.log(response);
 
       let task = response.task;
       console.log(task);
@@ -195,7 +265,7 @@ function depQues() {
 
     // Check for what to do next
     inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
+      //   console.log(response);
 
       let task = response.task;
       console.log(task);
@@ -208,5 +278,4 @@ function depQues() {
   });
 }
 
-// // Function call to initialize app
-// init();
+init();
