@@ -15,12 +15,12 @@ VALUES (1, 'Full Stack Web Dev', 75000, 2),
        (6, 'Senior Manager', 93000, 2),
        (7, 'CEO', '350000', 5) 
 
-INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ('Leah', 'Nelson', 7, NULL),
-       ('Tom', 'Myspace', 2, 3),
-       ('Christian', 'Henry', 6, 1),
-       ('Neil', 'Denver', 6, 1),
-       ('Harrison', 'Kidd', 5, NULL),
-       ('Christyn', 'Garcia', 4, 1),
-       ('Jacob', 'Guiro', 3, 3),
-       ('Jessamyn', 'McTwigan', 2, 3)
+INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
+VALUES (1, 'Leah', 'Nelson', 7, NULL),
+       (2, 'Tom', 'Myspace', 2, 3),
+       (3, 'Christian', 'Henry', 6, 1),
+       (4, 'Neil', 'Denver', 6, 1),
+       (5, 'Harrison', 'Kidd', 5, NULL),
+       (6, 'Christyn', 'Garcia', 4, 1),
+       (7, 'Jacob', 'Guiro', 3, 3),
+       (8, 'Jessamyn', 'McTwigan', 2, 3)

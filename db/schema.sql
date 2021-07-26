@@ -10,7 +10,11 @@ CREATE TABLE employees(
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
-    manager_id INT 
+    CONSTRAINT fk_role
+    FOREIGN KEY (role_id)
+    REFERENCES roles(id),
+    manager_id INT,
+    REFERENCES employees
 );
 
 -- Create a table to just hold the departments. If there is no employee in a certain department in the employee db, would need to be able to still access all department values
@@ -21,7 +25,7 @@ CREATE TABLE departments(
 
 -- Create a table to just hold the roles. As new roles are created, they can be inserted into this table with the relevant info
 CREATE TABLE roles(
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT NOT NULL
@@ -29,8 +33,14 @@ CREATE TABLE roles(
     REFERENCES departments(id)
 );
 
--- Need to be able to list all employees using a CLI response
-SELECT * FROM employees
-
--- Need to be able to list all departments using a CLI response
-SELECT * FROM departments
+-- Join function for all employees
+SELECT e.id employee_id, 
+CONCAT(e.first_name, ' ', e.last_name) AS employee_name, 
+roles.title, departments.name AS department, 
+roles.salary, 
+CONCAT(m.first_name, ' ', m.last_name) AS manager_name 
+FROM employees e 
+LEFT JOIN employees m ON e.manager_id = m.id
+INNER JOIN roles ON (roles.id = e.role_id)
+INNER JOIN departments ON (departments.id = roles.department_id)
+ORDER BY e.id;

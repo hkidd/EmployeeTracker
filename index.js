@@ -92,98 +92,114 @@ const roleQuestions = [
     choices: [depArray], //Array of all roles that have been added, or pull from database?
   },
 ];
-function init() {
+
+function mainPrompt() {
   inquirer.prompt(mainQuestion).then((response) => {
     let task = response.task;
-    console.log(task);
+    // console.log(task);
 
-    checkTask(task);
-    return task;
+    switch (task) {
+      case "View All Employees":
+        // This should run the SELECT * FROM employees query
+        viewAllEmployees();
+        break;
+      case "View All Departments":
+        // This should run the SELECT * FROM departments query
+        viewAllDeps();
+        break;
+      case "View All Roles":
+        // This should run the SELECT * FROM roles query
+        viewAllRoles();
+        break;
+      case "Add Employee":
+        // This should activate the employee questions prompts
+        empQues();
+        break;
+      case "Add Role":
+        // This should activate the role questions prompts
+        roleQues();
+        break;
+      case "Add Department":
+        // This should activate the add department prompt
+        depQues();
+        break;
+      case "I'm Done":
+        // End the server connection/program
+        db.end();
+        return;
+    }
   });
 }
 
-function checkTask(task) {
-  switch (task) {
-    case "View All Employees":
-      // This should run the SELECT * FROM employees query
-      viewAllEmployees();
-      break;
-    case "View All Departments":
-      // This should run the SELECT * FROM departments query
-      viewAllDeps();
-      break;
-    case "View All Roles":
-      // This should run the SELECT * FROM roles query
-      viewAllRoles();
-      break;
-    case "Add Employee":
-      // This should activate the employee questions prompts
-      empQues();
-      break;
-    case "Add Role":
-      // This should activate the role questions prompts
-      roleQues();
-      break;
-    case "Add Department":
-      // This should activate the add department prompt
-      depQues();
-      break;
-    case "I'm Done":
-      // End the server connection/program
-      db.end();
-      break;
-  }
-}
+// function checkTask(task) {
+//   switch (task) {
+//     case "View All Employees":
+//       // This should run the SELECT * FROM employees query
+//       viewAllEmployees();
+//       break;
+//     case "View All Departments":
+//       // This should run the SELECT * FROM departments query
+//       viewAllDeps();
+//       break;
+//     case "View All Roles":
+//       // This should run the SELECT * FROM roles query
+//       viewAllRoles();
+//       break;
+//     case "Add Employee":
+//       // This should activate the employee questions prompts
+//       empQues();
+//       break;
+//     case "Add Role":
+//       // This should activate the role questions prompts
+//       roleQues();
+//       break;
+//     case "Add Department":
+//       // This should activate the add department prompt
+//       depQues();
+//       break;
+//     case "I'm Done":
+//       // End the server connection/program
+//       db.end();
+//       return;
+//   }
+// }
 
 function viewAllEmployees() {
-  db.query("SELECT * FROM employees", function (err, results) {
-    console.log(results);
+  // Need to join the tables
+  db.query("SELECT e.id employee_id, CONCAT(e.first_name, ' ', e.last_name) AS employee_name, roles.title, departments.name AS department, roles.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employees e LEFT JOIN employees m ON e.manager_id = m.id INNER JOIN roles ON (roles.id = e.role_id) INNER JOIN departments ON (departments.id = roles.department_id) ORDER BY e.id;", function (err, results) {
+    console.log('\n');
+    console.table(results);
+    console.log('\n');
   });
 
   // Check for what to do next
-  inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
-
-    let task = response.task;
-    console.log(task);
-
-    checkTask(task);
-    return task;
-  });
+  mainPrompt();
 }
 
 function viewAllDeps() {
-  db.query("SELECT * FROM departments", function (err, results) {
-    console.log(results);
+  // Need to join the tables
+  db.query("SELECT id, name AS department FROM departments", function (err, results) {
+    console.log('\n');
+    console.table(results);
+    console.log('\n');
+
   });
 
   // Check for what to do next
-  inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
-
-    let task = response.task;
-    console.log(task);
-
-    checkTask(task);
-    return task;
-  });
+  mainPrompt();
 }
 
 function viewAllRoles() {
+  // Need to join the tables
   db.query("SELECT * FROM roles", function (err, results) {
-    console.log(results);
+    console.log('\n');
+    console.table(results);
+    console.log('\n');
+
   });
 
   // Check for what to do next
-  inquirer.prompt(mainQuestion).then((response) => {
-    //   console.log(response);
-
-    let task = response.task;
-    console.log(task);
-
-    checkTask(task);
-    return task;
-  });
+  mainPrompt();
 }
 
 function empQues() {
@@ -207,17 +223,7 @@ function empQues() {
     console.log(newEmployee);
 
     // Check for what to do next
-    inquirer.prompt(mainQuestion).then((response) => {
-      //   console.log(response);
-
-      let task = response.task;
-      console.log(task);
-
-      checkTask(task);
-      return task;
-    });
-
-    checkTask(task);
+    mainPrompt();
   });
 }
 
@@ -236,17 +242,7 @@ function roleQues() {
     console.log(newRole);
 
     // Check for what to do next
-    inquirer.prompt(mainQuestion).then((response) => {
-      //   console.log(response);
-
-      let task = response.task;
-      console.log(task);
-
-      checkTask(task);
-      return task;
-    });
-
-    checkTask(task);
+    mainPrompt();
   });
 }
 
@@ -264,18 +260,8 @@ function depQues() {
     console.log(newDepartment);
 
     // Check for what to do next
-    inquirer.prompt(mainQuestion).then((response) => {
-      //   console.log(response);
-
-      let task = response.task;
-      console.log(task);
-
-      checkTask(task);
-      return task;
-    });
-
-    checkTask(task);
+    mainPrompt();
   });
 }
 
-init();
+mainPrompt();
