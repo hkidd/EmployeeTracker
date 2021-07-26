@@ -159,7 +159,6 @@ function empQues() {
   inquirer.prompt(empQuestions).then((response) => {
     // console.log(response);
 
-    let task = response.task;
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
     let emRole = response.emRole;
@@ -184,7 +183,6 @@ function roleQues() {
   inquirer.prompt(roleQuestions).then((response) => {
     // console.log(response);
 
-    let task = response.task;
     let roleName = response.roleName;
     let roleSalary = response.roleSalary;
     let roleDep = response.roleDep;
@@ -203,7 +201,6 @@ function depQues() {
   inquirer.prompt(depQuestion).then((response) => {
     // console.log(response);
 
-    let task = response.task;
     let newDep = response.depName;
 
     // Create a new department with this name
