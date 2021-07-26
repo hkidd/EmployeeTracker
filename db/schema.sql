@@ -44,3 +44,9 @@ LEFT JOIN employees m ON e.manager_id = m.id
 INNER JOIN roles ON (roles.id = e.role_id)
 INNER JOIN departments ON (departments.id = roles.department_id)
 ORDER BY e.id;
+
+-- Join function for all roles
+SELECT r.id, r.title, d.name AS department, r.salary
+FROM roles r
+INNER JOIN departments d 
+ON r.department_id = d.id;

@@ -100,27 +100,21 @@ function mainPrompt() {
 
     switch (task) {
       case "View All Employees":
-        // This should run the SELECT * FROM employees query
         viewAllEmployees();
         break;
       case "View All Departments":
-        // This should run the SELECT * FROM departments query
         viewAllDeps();
         break;
       case "View All Roles":
-        // This should run the SELECT * FROM roles query
         viewAllRoles();
         break;
       case "Add Employee":
-        // This should activate the employee questions prompts
         empQues();
         break;
       case "Add Role":
-        // This should activate the role questions prompts
         roleQues();
         break;
       case "Add Department":
-        // This should activate the add department prompt
         depQues();
         break;
       case "I'm Done":
@@ -130,39 +124,6 @@ function mainPrompt() {
     }
   });
 }
-
-// function checkTask(task) {
-//   switch (task) {
-//     case "View All Employees":
-//       // This should run the SELECT * FROM employees query
-//       viewAllEmployees();
-//       break;
-//     case "View All Departments":
-//       // This should run the SELECT * FROM departments query
-//       viewAllDeps();
-//       break;
-//     case "View All Roles":
-//       // This should run the SELECT * FROM roles query
-//       viewAllRoles();
-//       break;
-//     case "Add Employee":
-//       // This should activate the employee questions prompts
-//       empQues();
-//       break;
-//     case "Add Role":
-//       // This should activate the role questions prompts
-//       roleQues();
-//       break;
-//     case "Add Department":
-//       // This should activate the add department prompt
-//       depQues();
-//       break;
-//     case "I'm Done":
-//       // End the server connection/program
-//       db.end();
-//       return;
-//   }
-// }
 
 function viewAllEmployees() {
   // Need to join the tables
@@ -182,7 +143,6 @@ function viewAllDeps() {
     console.log('\n');
     console.table(results);
     console.log('\n');
-
   });
 
   // Check for what to do next
@@ -191,11 +151,10 @@ function viewAllDeps() {
 
 function viewAllRoles() {
   // Need to join the tables
-  db.query("SELECT * FROM roles", function (err, results) {
+  db.query("SELECT r.id, r.title, d.name AS department, r.salary FROM roles r INNER JOIN departments d ON r.department_id = d.id;", function (err, results) {
     console.log('\n');
     console.table(results);
     console.log('\n');
-
   });
 
   // Check for what to do next
