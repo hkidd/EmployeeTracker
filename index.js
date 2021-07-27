@@ -23,14 +23,17 @@ const mainQuestion = {
   ],
 };
 
-// Add Employee should prompt the user to type the first name of the employee, followed by last name, then select a role from an inquirer list and selet the employee's manager from an inquirer list as well (This adds the employee to the database.  INSERT INTO employees?)
-
-// Add Role should prompt the user to type the name of the role, followed by the salary of the role, and then using a list choose which department the role belongs to (Push into an array of role objects?)
-
-// Add Department should prompt the user to type the name of the new department, which is then added to the database (INSERT INTO departments?)
-
 // Update Employee Role should prompt the user to select an employee from an inquirer list (Keep an array of employee objects, as well as the database?  Or pull from the database? Will need to grab the employee id), then they are presented another list of roles to assign to this employee id.  When the new role is selected, the database is updated (UPDATE).
-
+let allEmps = [
+  "Leah",
+  "Tom",
+  "Christian",
+  "Neil",
+  "Harrison",
+  "Christyn",
+  "Jacob",
+  "Jessamyn",
+];
 let allDeps = ["Sales", "Engineering", "Finance", "Legal"];
 let allRoles = [
   "Full Stack Web Dev",
@@ -58,16 +61,15 @@ const empQuestions = [
     type: "list",
     message: "What is the employee's role?",
     name: "emRole",
-    choices: [allRoles], //Array of all roles that have been added, or pull from database?
+    choices: allRoles, //Array of all roles that have been added, pulled from db
   },
   {
     type: "list",
     message: "Who is the employee's manager?",
     name: "emManager",
+    choices: allEmps, //Array of all employees that have been added, pulled from db
   },
 ];
-
-// let depArray = ["Sales", "Engineering", "Finance", "Legal"];
 
 // Question for adding a new department
 const depQuestion = [
@@ -94,18 +96,16 @@ const roleQuestions = [
     type: "list",
     message: "Which department does the role belong to?",
     name: "roleDep",
-    choices: allDeps, //Array of all deps that have been added, or pull from database?
+    choices: allDeps, //Array of all deps that have been added, pulled from db
   },
 ];
 
 function mainPrompt() {
   getAllRoles();
-  console.log(allRoles);
   getAllDeps();
+  getAllEmps();
 
   inquirer.prompt(mainQuestion).then((response) => {
-    // let task = response.task;
-    // console.log(task);
 
     switch (response.task) {
       case "View All Employees":
@@ -204,14 +204,14 @@ function viewAllRoles() {
 // Put all roles in an array for the questions
 function getAllRoles() {
   db.query(
-    "SELECT title, salary, department_id FROM roles;",
+    "SELECT id, title, salary, department_id FROM roles;",
     function (err, results) {
       if (err) {
         console.log(err);
       }
 
-      results.forEach((i) => {
-        allRoles.push(i.title);
+      results.forEach((title) => {
+        allRoles.push(title);
       });
     }
   );
@@ -236,21 +236,23 @@ function getAllDeps() {
 
 // Put all roles in an array for the questions
 function getAllEmps() {
-  db.query("SELECT * FROM employees;", function (err, results) {
-    if (err) {
-      console.log(err);
-    }
+  db.query(
+    "SELECT id, first_name, last_name, role_id, manager_id FROM employees;",
+    function (err, results) {
+      if (err) {
+        console.log(err);
+      }
 
-    results.forEach((first_name) => {
-      allEmps.push(first_name);
-    });
-  });
-  // console.log(allEmps);
+      results.forEach((first_name) => {
+        allEmps.push(first_name);
+      });
+    }
+  );
+  console.log(allEmps);
   return allEmps;
 }
 
 function empQues() {
-
   getAllEmps();
 
   inquirer.prompt(empQuestions).then((response) => {
@@ -258,25 +260,25 @@ function empQues() {
 
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
-    let emRole = response.emRole;
+    let eRole = response.emRole;
     let emManager = response.emManager;
 
     let roleId;
 
-    // get deptId for role
+    // get id for role
     for (i = 0; i < allRoles.length; i++) {
-      if (emRole == allRoles[i].name) {
+      if (eRole == allRoles[i].title) {
         roleId = allRoles[i].id;
       }
     }
 
     console.log(roleId);
 
-    let managerId;
+    let managerId = null; // can be null by default
 
-    // get deptId for role
-    for (i = 0; i < allRoles.length; i++) {
-      if (emManager == allEmps[i].name) {
+    // get id for manager
+    for (i = 0; i < allEmps.length; i++) {
+      if (emManager == allEmps[i].first_name) {
         managerId = allEmps[i].id;
       }
     }
@@ -299,7 +301,6 @@ function empQues() {
 
 function roleQues() {
   inquirer.prompt(roleQuestions).then((response) => {
-
     let roleName = response.roleName;
     let roleSalary = response.roleSalary;
     let roleDep = response.roleDep;
@@ -336,9 +337,6 @@ function depQues() {
 
     // Create a new department with this name
     allDeps.push(newDep);
-    const newDepartment = new Department(newDep);
-
-    // console.log(newDepartment);
 
     db.query(
       `INSERT INTO departments (name) VALUES ("${newDep}");`,
@@ -346,11 +344,10 @@ function depQues() {
         if (err) return err;
 
         console.log("\n Added Department! \n");
-
-        // Check for what to do next
-        mainPrompt();
       }
     );
+    // Check for what to do next
+    mainPrompt();
   });
 }
 
