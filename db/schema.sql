@@ -50,3 +50,6 @@ SELECT r.id, r.title, d.name AS department, r.salary
 FROM roles r
 INNER JOIN departments d 
 ON r.department_id = d.id;
+
+-- INSERT newEmployee
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (${newEmployee.emFirstName}, ${newEmployee.emLastName}, ${newEmployee.emRole}, ${newEmployee.emManager})
