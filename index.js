@@ -21,7 +21,6 @@ const mainQuestion = {
   ],
 };
 
-// Update Employee Role should prompt the user to select an employee from an inquirer list (Keep an array of employee objects, as well as the database?  Or pull from the database? Will need to grab the employee id), then they are presented another list of roles to assign to this employee id.  When the new role is selected, the database is updated (UPDATE).
 let allEmps = [
   "None",
   "Leah Nelson",
@@ -120,7 +119,6 @@ function mainPrompt() {
   getAllEmps();
 
   inquirer.prompt(mainQuestion).then((response) => {
-
     switch (response.task) {
       case "View All Employees":
         viewAllEmployees();
@@ -270,10 +268,9 @@ function getAllEmps() {
 }
 
 function empQues() {
-  getAllEmps();
+  // getAllEmps();
 
   inquirer.prompt(empQuestions).then((response) => {
-
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
     let eRole = response.emRole;
@@ -303,7 +300,7 @@ function empQues() {
       function (err, results) {
         if (err) return err;
 
-        console.log("\n Added Employee! \n");
+        console.log(`\n Added ${emFirstName} to the database! \n`);
       }
     );
 
@@ -345,8 +342,6 @@ function roleQues() {
 
 function depQues() {
   inquirer.prompt(depQuestion).then((response) => {
-    // console.log(response);
-
     let newDep = response.depName;
 
     // Create a new department with this name
@@ -366,12 +361,9 @@ function depQues() {
   });
 }
 
-// Need to be able to update an employee's role 
+// Need to be able to update an employee's role
 function updateEmp() {
-  getAllEmps();
-
   inquirer.prompt(updateEmpQues).then((response) => {
-
     let upEmpName = response.upEmpName;
     let newEmpRole = response.upEmpRole;
 
@@ -399,7 +391,7 @@ function updateEmp() {
       function (err, results) {
         if (err) return err;
 
-        console.log("\n Updated Employee! \n");
+        console.log(`\n Updated ${upEmpName}'s role! \n`);
       }
     );
 
