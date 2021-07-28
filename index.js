@@ -231,7 +231,6 @@ function getAllRoles() {
       });
     }
   );
-  // console.log(allRoles);
   return allRoles;
 }
 
@@ -246,7 +245,6 @@ function getAllDeps() {
       allDeps.push(name);
     });
   });
-  // console.log(allDeps);
   return allDeps;
 }
 
@@ -268,8 +266,6 @@ function getAllEmps() {
 }
 
 function empQues() {
-  // getAllEmps();
-
   inquirer.prompt(empQuestions).then((response) => {
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
