@@ -26,7 +26,7 @@ CREATE TABLE departments(
 -- Create a table to just hold the roles. As new roles are created, they can be inserted into this table with the relevant info
 CREATE TABLE roles(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(30) NOT NULL,
+    title VARCHAR(30) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT NOT NULL
     FOREIGN KEY (department_id)

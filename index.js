@@ -1,8 +1,5 @@
 const server = require("./server");
 const inquirer = require("inquirer");
-const Employee = require("./lib/Employee");
-const Department = require("./lib/Department");
-const Role = require("./lib/Role");
 const cTable = require("console.table");
 const db = require("./server");
 
@@ -19,20 +16,22 @@ const mainQuestion = {
     "Add Role",
     "View All Departments",
     "Add Department",
+    "Update Employee Role",
     "I'm Done",
   ],
 };
 
 // Update Employee Role should prompt the user to select an employee from an inquirer list (Keep an array of employee objects, as well as the database?  Or pull from the database? Will need to grab the employee id), then they are presented another list of roles to assign to this employee id.  When the new role is selected, the database is updated (UPDATE).
 let allEmps = [
-  "Leah",
-  "Tom",
-  "Christian",
-  "Neil",
-  "Harrison",
-  "Christyn",
-  "Jacob",
-  "Jessamyn",
+  "None",
+  "Leah Nelson",
+  "Tom Myspace",
+  "Christian Henry",
+  "Neil Denver",
+  "Harrison Kidd",
+  "Christyn Garcia",
+  "Jacob Guiro",
+  "Jessamyn McTwigan",
 ];
 let allDeps = ["Sales", "Engineering", "Finance", "Legal"];
 let allRoles = [
@@ -100,6 +99,21 @@ const roleQuestions = [
   },
 ];
 
+const updateEmpQues = [
+  {
+    type: "list",
+    message: "Which employee would you like to update?",
+    name: "upEmpName",
+    choices: allEmps,
+  },
+  {
+    type: "list",
+    message: "What's their new role'?",
+    name: "upEmpRole",
+    choices: allRoles,
+  },
+];
+
 function mainPrompt() {
   getAllRoles();
   getAllDeps();
@@ -130,6 +144,10 @@ function mainPrompt() {
 
       case "Add Department":
         depQues();
+        break;
+
+      case "Update Employee Role":
+        updateEmp();
         break;
 
       case "I'm Done":
@@ -237,18 +255,17 @@ function getAllDeps() {
 // Put all roles in an array for the questions
 function getAllEmps() {
   db.query(
-    "SELECT id, first_name, last_name, role_id, manager_id FROM employees;",
+    "SELECT id, CONCAT(first_name, ' ', last_name) AS employee_name, role_id, manager_id FROM employees;",
     function (err, results) {
       if (err) {
         console.log(err);
       }
 
-      results.forEach((first_name) => {
-        allEmps.push(first_name);
+      results.forEach((employee_name) => {
+        allEmps.push(employee_name);
       });
     }
   );
-  console.log(allEmps);
   return allEmps;
 }
 
@@ -256,7 +273,6 @@ function empQues() {
   getAllEmps();
 
   inquirer.prompt(empQuestions).then((response) => {
-    // console.log(response);
 
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
@@ -272,19 +288,16 @@ function empQues() {
       }
     }
 
-    console.log(roleId);
-
     let managerId = null; // can be null by default
 
     // get id for manager
     for (i = 0; i < allEmps.length; i++) {
-      if (emManager == allEmps[i].first_name) {
+      if (emManager == allEmps[i].employee_name) {
         managerId = allEmps[i].id;
       }
     }
 
-    console.log(managerId);
-
+    // db query to insert the new employee info, quotes needed for the strings
     db.query(
       `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${emFirstName}", "${emLastName}", ${roleId}, ${managerId});`,
       function (err, results) {
@@ -316,6 +329,7 @@ function roleQues() {
 
     console.log(deptId);
 
+    // db query to insert the new role info, quotes needed for the string
     db.query(
       `INSERT INTO roles (title, salary, department_id) VALUES ("${roleName}", ${roleSalary}, ${deptId});`,
       function (err, results) {
@@ -338,6 +352,7 @@ function depQues() {
     // Create a new department with this name
     allDeps.push(newDep);
 
+    // db query to insert the new department info, quotes needed for the string
     db.query(
       `INSERT INTO departments (name) VALUES ("${newDep}");`,
       function (err, results) {
@@ -346,6 +361,48 @@ function depQues() {
         console.log("\n Added Department! \n");
       }
     );
+    // Check for what to do next
+    mainPrompt();
+  });
+}
+
+// Need to be able to update an employee's role 
+function updateEmp() {
+  getAllEmps();
+
+  inquirer.prompt(updateEmpQues).then((response) => {
+
+    let upEmpName = response.upEmpName;
+    let newEmpRole = response.upEmpRole;
+
+    let empId;
+
+    // get id for employee
+    for (i = 0; i < allEmps.length; i++) {
+      if (upEmpName == allEmps[i].employee_name) {
+        empId = allEmps[i].id;
+      }
+    }
+
+    let roleId;
+
+    // get id for role
+    for (i = 0; i < allRoles.length; i++) {
+      if (newEmpRole == allRoles[i].title) {
+        roleId = allRoles[i].id;
+      }
+    }
+
+    // db query to insert the new employee info
+    db.query(
+      `UPDATE employees SET role_id = ${roleId} WHERE id = ${empId};`,
+      function (err, results) {
+        if (err) return err;
+
+        console.log("\n Updated Employee! \n");
+      }
+    );
+
     // Check for what to do next
     mainPrompt();
   });
