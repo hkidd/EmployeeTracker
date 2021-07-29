@@ -138,7 +138,7 @@ function getAllRoles() {
   );
 }
 
-// Put all roles in an array for the questions
+// Put all departments in an array for the questions
 function getAllDeps() {
   return new Promise((resolve, reject) => {
   db.query("SELECT id, name FROM departments;", function (err, results) {
@@ -153,7 +153,7 @@ function getAllDeps() {
   });
 }
 
-// Put all roles in an array for the questions
+// Put all employess in an array for the questions
 function getAllEmps() {
   return new Promise((resolve, reject) => {
   db.query(
