@@ -278,9 +278,6 @@ function depQues() {
   ]).then((response) => {
     let newDep = response.depName;
 
-    // Create a new department with this name
-    allDeps.push(newDep);
-
     // db query to insert the new department info, quotes needed for the string
     db.query(
       `INSERT INTO departments (name) VALUES ("${newDep}");`,

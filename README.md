@@ -40,7 +40,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ```
 
 ## Walkthrough Video
-
+![ExampleVid]https://drive.google.com/file/d/1bBy8VxH2C_ZCyk6Khzc-tYxl4erZ5EFt/view
 <br>
 
 ## License
@@ -59,7 +59,14 @@ npm i console.table
 ```
 
 ## Contributing
-Harrison Kidd
+Harrison Kidd<br>
+<br>
+With the help of:<br>
+<br>
+Jacob Guiro<br>
+Jessamyn McTwigan<br>
+Brandon Norsworthy<br>
+Christyn Garcia<br>
 
 ## Questions
 Contact me with any questions here: [harrisonakidd@gmail.com](mailto:harrisonakidd@gmail.com)
