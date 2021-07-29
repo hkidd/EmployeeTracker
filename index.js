@@ -188,7 +188,6 @@ function viewAllDeps() {
       console.table(results);
       console.log("\n");
 
-      // console.log(results);
     }
   );
 
@@ -209,7 +208,6 @@ function viewAllRoles() {
       console.table(results);
       console.log("\n");
 
-      // console.log(results);
     }
   );
 
@@ -226,9 +224,8 @@ function getAllRoles() {
         console.log(err);
       }
 
-      results.forEach((title) => {
-        allRoles.push(title);
-      });
+      allRoles = results.map(i => { return i.title })
+      // console.log(allRoles);
     }
   );
   return allRoles;
@@ -241,9 +238,8 @@ function getAllDeps() {
       console.log(err);
     }
 
-    results.forEach((name) => {
-      allDeps.push(name);
-    });
+    allDeps = results.map(i => { return i.name })
+    // console.log(allDeps);
   });
   return allDeps;
 }
@@ -257,9 +253,8 @@ function getAllEmps() {
         console.log(err);
       }
 
-      results.forEach((employee_name) => {
-        allEmps.push(employee_name);
-      });
+      allEmps = results.map(i => { return i.employee_name })
+      // console.log(allEmps);
     }
   );
   return allEmps;
