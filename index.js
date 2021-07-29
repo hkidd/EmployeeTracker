@@ -341,6 +341,7 @@ async function updateEmp() {
   });
 }
 
+// Instead of for loops, needed to do more querys to grab the id's for each name, role, and department
 function getIdFromName(name) {
   return new Promise(function (resolve, reject) {
     let empId;
