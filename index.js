@@ -133,7 +133,6 @@ function getAllRoles() {
       // Map through the array and return the role title from each index
       let allRoles = results.map(i => { return i.title })
       resolve(allRoles);
-      console.log(allRoles);
       });
     }
   );
@@ -150,7 +149,6 @@ function getAllDeps() {
     // Map through the array and return the name from each index
     let allDeps = results.map(i => { return i.name })
     resolve(allDeps);
-    console.log(allDeps);
     });
   });
 }
@@ -168,7 +166,6 @@ function getAllEmps() {
       // Map through the array and return the employee name from each index
       let allEmps = results.map(i => { return i.employee_name })
       resolve(allEmps);
-      console.log(allEmps);
       });
     }
   );
