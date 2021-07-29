@@ -40,7 +40,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ```
 
 ## Walkthrough Video
-<iframe src="https://drive.google.com/file/d/1bBy8VxH2C_ZCyk6Khzc-tYxl4erZ5EFt/preview" width="640" height="480"></iframe>
+https://drive.google.com/file/d/1bBy8VxH2C_ZCyk6Khzc-tYxl4erZ5EFt/view
 <br>
 
 ## License
