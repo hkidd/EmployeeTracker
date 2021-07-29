@@ -224,8 +224,8 @@ function getAllRoles() {
         console.log(err);
       }
 
+      // Map through the results array, and only return each role title per index
       allRoles = results.map(i => { return i.title })
-      // console.log(allRoles);
     }
   );
   return allRoles;
@@ -238,8 +238,8 @@ function getAllDeps() {
       console.log(err);
     }
 
+    // Map through the results array, and only return each department name per index
     allDeps = results.map(i => { return i.name })
-    // console.log(allDeps);
   });
   return allDeps;
 }
@@ -253,8 +253,8 @@ function getAllEmps() {
         console.log(err);
       }
 
+      // Map through the results array, and only return each employee_name per index
       allEmps = results.map(i => { return i.employee_name })
-      // console.log(allEmps);
     }
   );
   return allEmps;
