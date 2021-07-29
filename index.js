@@ -21,102 +21,7 @@ const mainQuestion = {
   ],
 };
 
-let allEmps = [
-  "None",
-  "Leah Nelson",
-  "Tom Myspace",
-  "Christian Henry",
-  "Neil Denver",
-  "Harrison Kidd",
-  "Christyn Garcia",
-  "Jacob Guiro",
-  "Jessamyn McTwigan",
-];
-let allDeps = ["Sales", "Engineering", "Finance", "Legal"];
-let allRoles = [
-  "Full Stack Web Dev",
-  "Data Scientist",
-  "Software Salesman",
-  "Accountant",
-  "Lawyer",
-  "Senior Manager",
-  "CEO",
-];
-
-// Array of questions for adding a new employee
-const empQuestions = [
-  {
-    type: "input",
-    message: "What is the employee's first name?",
-    name: "emFirstName",
-  },
-  {
-    type: "input",
-    message: "What is the employee's last name?",
-    name: "emLastName",
-  },
-  {
-    type: "list",
-    message: "What is the employee's role?",
-    name: "emRole",
-    choices: allRoles, //Array of all roles that have been added, pulled from db
-  },
-  {
-    type: "list",
-    message: "Who is the employee's manager?",
-    name: "emManager",
-    choices: allEmps, //Array of all employees that have been added, pulled from db
-  },
-];
-
-// Question for adding a new department
-const depQuestion = [
-  {
-    type: "input",
-    message: "What is the name of the department?",
-    name: "depName",
-  },
-];
-
-// Array of questions for adding a new role
-const roleQuestions = [
-  {
-    type: "input",
-    message: "What is the name of the role?",
-    name: "roleName",
-  },
-  {
-    type: "input",
-    message: "What is the salary of the role?",
-    name: "roleSalary",
-  },
-  {
-    type: "list",
-    message: "Which department does the role belong to?",
-    name: "roleDep",
-    choices: allDeps, //Array of all deps that have been added, pulled from db
-  },
-];
-
-const updateEmpQues = [
-  {
-    type: "list",
-    message: "Which employee would you like to update?",
-    name: "upEmpName",
-    choices: allEmps,
-  },
-  {
-    type: "list",
-    message: "What's their new role'?",
-    name: "upEmpRole",
-    choices: allRoles,
-  },
-];
-
 function mainPrompt() {
-  getAllRoles();
-  getAllDeps();
-  getAllEmps();
 
   inquirer.prompt(mainQuestion).then((response) => {
     switch (response.task) {
@@ -217,6 +122,7 @@ function viewAllRoles() {
 
 // Put all roles in an array for the questions
 function getAllRoles() {
+  return new Promise((resolve, reject) => {
   db.query(
     "SELECT id, title, salary, department_id FROM roles;",
     function (err, results) {
@@ -224,28 +130,34 @@ function getAllRoles() {
         console.log(err);
       }
 
-      // Map through the results array, and only return each role title per index
-      allRoles = results.map(i => { return i.title })
+      // Map through the array and return the role title from each index
+      let allRoles = results.map(i => { return i.title })
+      resolve(allRoles);
+      console.log(allRoles);
+      });
     }
   );
-  return allRoles;
 }
 
 // Put all roles in an array for the questions
 function getAllDeps() {
+  return new Promise((resolve, reject) => {
   db.query("SELECT id, name FROM departments;", function (err, results) {
     if (err) {
       console.log(err);
     }
 
-    // Map through the results array, and only return each department name per index
-    allDeps = results.map(i => { return i.name })
+    // Map through the array and return the name from each index
+    let allDeps = results.map(i => { return i.name })
+    resolve(allDeps);
+    console.log(allDeps);
+    });
   });
-  return allDeps;
 }
 
 // Put all roles in an array for the questions
 function getAllEmps() {
+  return new Promise((resolve, reject) => {
   db.query(
     "SELECT id, CONCAT(first_name, ' ', last_name) AS employee_name, role_id, manager_id FROM employees;",
     function (err, results) {
@@ -253,37 +165,52 @@ function getAllEmps() {
         console.log(err);
       }
 
-      // Map through the results array, and only return each employee_name per index
-      allEmps = results.map(i => { return i.employee_name })
+      // Map through the array and return the employee name from each index
+      let allEmps = results.map(i => { return i.employee_name })
+      resolve(allEmps);
+      console.log(allEmps);
+      });
     }
   );
-  return allEmps;
 }
 
-function empQues() {
-  inquirer.prompt(empQuestions).then((response) => {
+async function empQues() {
+  // To dynamically update these arrays, need to do async and await along with promises
+  const roles = await getAllRoles();
+  const emps = await getAllEmps();
+
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "What is the employee's first name?",
+      name: "emFirstName",
+    },
+    {
+      type: "input",
+      message: "What is the employee's last name?",
+      name: "emLastName",
+    },
+    {
+      type: "list",
+      message: "What is the employee's role?",
+      name: "emRole",
+      choices: roles, //Array of all roles that have been added, pulled from db
+    },
+    {
+      type: "list",
+      message: "Who is the employee's manager?",
+      name: "emManager",
+      choices: emps, //Array of all employees that have been added, pulled from db
+    },
+  ]).then(async (response) => {
     let emFirstName = response.emFirstName;
     let emLastName = response.emLastName;
     let eRole = response.emRole;
     let emManager = response.emManager;
 
-    let roleId;
+    let roleId = await getIdFromRole(eRole);
 
-    // get id for role
-    for (i = 0; i < allRoles.length; i++) {
-      if (eRole == allRoles[i].title) {
-        roleId = allRoles[i].id;
-      }
-    }
-
-    let managerId = null; // can be null by default
-
-    // get id for manager
-    for (i = 0; i < allEmps.length; i++) {
-      if (emManager == allEmps[i].employee_name) {
-        managerId = allEmps[i].id;
-      }
-    }
+    let managerId = await getIdFromName(emManager) || null; // can be null by default
 
     // db query to insert the new employee info, quotes needed for the strings
     db.query(
@@ -300,20 +227,33 @@ function empQues() {
   });
 }
 
-function roleQues() {
-  inquirer.prompt(roleQuestions).then((response) => {
+async function roleQues() {
+  const deps = await getAllDeps();
+
+  inquirer.prompt([
+  {
+    type: "input",
+    message: "What is the name of the role?",
+    name: "roleName",
+  },
+  {
+    type: "input",
+    message: "What is the salary of the role?",
+    name: "roleSalary",
+  },
+  {
+    type: "list",
+    message: "Which department does the role belong to?",
+    name: "roleDep",
+    choices: deps, //Array of all deps that have been added, pulled from db
+  },
+]).then(async (response) => {
+  console.log(response);
     let roleName = response.roleName;
     let roleSalary = response.roleSalary;
     let roleDep = response.roleDep;
 
-    let deptId;
-
-    // get deptId for role
-    for (i = 0; i < allDeps.length; i++) {
-      if (roleDep == allDeps[i].name) {
-        deptId = allDeps[i].id;
-      }
-    }
+    let deptId = await getIdFromDep(roleDep);
 
     console.log(deptId);
 
@@ -332,7 +272,13 @@ function roleQues() {
 }
 
 function depQues() {
-  inquirer.prompt(depQuestion).then((response) => {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "What is the name of the department?",
+      name: "depName",
+    },
+  ]).then((response) => {
     let newDep = response.depName;
 
     // Create a new department with this name
@@ -353,28 +299,32 @@ function depQues() {
 }
 
 // Need to be able to update an employee's role
-function updateEmp() {
-  inquirer.prompt(updateEmpQues).then((response) => {
+async function updateEmp() {
+  // To dynamically update these arrays, need to do async and await along with promises
+  const emps = await getAllEmps();
+  const roles = await getAllRoles();
+
+  inquirer.prompt([
+  {
+    type: "list",
+    message: "Which employee would you like to update?",
+    name: "upEmpName",
+    choices: emps,
+  },
+  {
+    type: "list",
+    message: "What's their new role'?",
+    name: "upEmpRole",
+    choices: roles,
+  },
+]).then(async (response) => {
+
     let upEmpName = response.upEmpName;
     let newEmpRole = response.upEmpRole;
 
-    let empId;
+    let empId = await getIdFromName(upEmpName);
 
-    // get id for employee
-    for (i = 0; i < allEmps.length; i++) {
-      if (upEmpName == allEmps[i].employee_name) {
-        empId = allEmps[i].id;
-      }
-    }
-
-    let roleId;
-
-    // get id for role
-    for (i = 0; i < allRoles.length; i++) {
-      if (newEmpRole == allRoles[i].title) {
-        roleId = allRoles[i].id;
-      }
-    }
+    let roleId = await getIdFromRole(newEmpRole);
 
     // db query to insert the new employee info
     db.query(
@@ -390,5 +340,53 @@ function updateEmp() {
     mainPrompt();
   });
 }
+
+function getIdFromName(name) {
+  return new Promise(function (resolve, reject) {
+    let empId;
+
+    db.query(`SELECT * FROM employees WHERE CONCAT(first_name, ' ', last_name) LIKE '%${name}%';`,
+    function (err, results) {
+      if (err) {
+        console.log(err)
+      }
+
+      empId = results[0].id
+      resolve(empId);
+    })
+  })
+};
+
+function getIdFromRole(role) {
+  return new Promise(function (resolve, reject) {
+    let roleId;
+
+    db.query(`SELECT * FROM roles WHERE title LIKE '%${role}%';`,
+    function (err, results) {
+      if (err) {
+        console.log(err)
+      }
+
+      roleId = results[0].id
+      resolve(roleId);
+    })
+  })
+};
+
+function getIdFromDep(dep) {
+  return new Promise(function (resolve, reject) {
+    let depId;
+
+    db.query(`SELECT * FROM departments WHERE name LIKE '%${dep}%';`,
+    function (err, results) {
+      if (err) {
+        console.log(err)
+      }
+
+      depId = results[0].id
+      resolve(depId);
+    })
+  })
+};
 
 mainPrompt();
